@@ -1,6 +1,6 @@
 import turtle
 import random
-
+import sys
 
 # Set up the screen
 wn = turtle.Screen()
@@ -18,6 +18,7 @@ player.penup()
 player.speed(0)
 player.goto(0, 0)
 
+
 score_writer = turtle.Turtle()
 score_writer.hideturtle()
 score_writer.penup()
@@ -31,6 +32,8 @@ game_over_var = False
 pipes = []
 pipe_speed = 4
 score_var = 0
+
+
 # Functions
 
 def go_up():
@@ -83,7 +86,7 @@ def create_pipes():
 def move_pipe():
     global game_over_var
     if game_over_var:
-        return None
+        game_over()
     else:
         if pipes[0].xcor() < -300:
             for i in range (len(pipes)):
@@ -94,6 +97,15 @@ def move_pipe():
         else:
             for item in range (len(pipes)):
                 pipes[item].forward(pipe_speed)
+                
+def exit_game():
+    """Clean exit from the game"""
+    for pipe in pipes:
+        pipe.hideturtle()
+    player.hideturtle()
+    score_writer.clear()
+    wn.bye()
+    sys.exit()
 
 #Collision Detection
 
@@ -120,16 +132,19 @@ def score():
 # Keyboard bindings
 wn.listen()
 wn.onkey(go_up, "Up")
-
+wn.onkey(exit_game, "Escape")
 
 #create pipes
-for i in range(4):
+for i in range(1):
     create_pipes()
 
 # Main game loop 
 while True:
-    collision_detection()
-    gravity()
-    move_pipe()
-    score()
-    wn.update()
+    try:
+        collision_detection()
+        gravity()
+        move_pipe()
+        score()
+        wn.update()
+    except:
+        exit_game()
