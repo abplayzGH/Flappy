@@ -18,12 +18,19 @@ player.penup()
 player.speed(0)
 player.goto(0, 0)
 
+score_writer = turtle.Turtle()
+score_writer.hideturtle()
+score_writer.penup()
+score_writer.speed(0)
+score_writer.goto(0, 150)
+score_writer.write("Score: 0", align="center", font=("Courier", 24, "normal"))
+
 #variables
 
 game_over_var = False
 pipes = []
 pipe_speed = 2
-
+score_var = 0
 # Functions
 
 def go_up():
@@ -45,6 +52,7 @@ def game_over():
     player.write("Game Over", align="center", font=("Courier", 24, "normal"))
     game_over_var = True
     
+#pipe functions   
 def generate_pipe_top():
     pipe = turtle.Turtle()
     pipe.hideturtle()
@@ -86,6 +94,22 @@ def move_pipe():
             for item in range (len(pipes)):
                 pipes[item].forward(pipe_speed)
 
+#Collision Detection
+
+def collision_detection():
+    for item in range (len(pipes)):
+        if player.distance(pipes[item]) < 40:
+            game_over()
+
+#score functions
+
+def score():
+    global score_var
+    if player.xcor() == pipes[0].xcor():
+        score_var += 1
+        print(score_var)
+        score_writer.clear()
+        score_writer.write((f"Score: {score_var}"), align="center", font=("Courier", 24, "normal"))
 
 # Keyboard bindings
 wn.listen()
@@ -95,7 +119,8 @@ wn.onkey(gravity, "Down")
 # Main game loop
 create_pipes()
 while True:
-    print(game_over_var)
+    collision_detection()
     gravity()
     move_pipe()
+    score()
     wn.update()
