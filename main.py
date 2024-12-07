@@ -29,7 +29,7 @@ score_writer.write("Score: 0", align="center", font=("Courier", 24, "normal"))
 
 game_over_var = False
 pipes = []
-pipe_speed = 2
+pipe_speed = 4
 score_var = 0
 # Functions
 
@@ -53,31 +53,32 @@ def game_over():
     game_over_var = True
     
 #pipe functions   
-def generate_pipe_top():
+def generate_pipe_top(x):
     pipe = turtle.Turtle()
     pipe.hideturtle()
     pipe.shape("pipetop.gif")
     pipe.penup()
     pipe.speed(0)
-    pipe.goto(300, random.randint(100, 200))
+    pipe.goto(x, random.randint(100, 200))
     pipe.setheading(180)
     pipe.showturtle()
     return pipe
 
-def generate_pipe_bottom():
+def generate_pipe_bottom(x):
     pipe = turtle.Turtle()
     pipe.hideturtle()
     pipe.shape("pipebottom.gif")
     pipe.penup()
     pipe.speed(0)
-    pipe.goto(300, random.randint(-200, -100))
+    pipe.goto(x, random.randint(-200, -100))
     pipe.setheading(180)
     pipe.showturtle()
     return pipe
 
 def create_pipes():
-    pipes.append(generate_pipe_top())
-    pipes.append(generate_pipe_bottom())
+    x = random.randint(0, 200)
+    pipes.extend([generate_pipe_top(x), generate_pipe_bottom(x)])
+    pipes.append(generate_pipe_bottom(x))
     
 def move_pipe():
     global game_over_var
@@ -98,7 +99,7 @@ def move_pipe():
 
 def collision_detection():
     for item in range (len(pipes)):
-        if player.distance(pipes[item]) < 40:
+        if player.distance(pipes[item]) < 75:
             game_over()
 
 #score functions
@@ -110,14 +111,22 @@ def score():
         print(score_var)
         score_writer.clear()
         score_writer.write((f"Score: {score_var}"), align="center", font=("Courier", 24, "normal"))
+        if score_var % 5 == 0:
+            global pipe_speed
+            pipe_speed += 1
+            print(score_var % 5 == 0)
+
 
 # Keyboard bindings
 wn.listen()
 wn.onkey(go_up, "Up")
-wn.onkey(gravity, "Down")
 
-# Main game loop
-create_pipes()
+
+#create pipes
+for i in range(4):
+    create_pipes()
+
+# Main game loop 
 while True:
     collision_detection()
     gravity()
