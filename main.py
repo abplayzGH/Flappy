@@ -1,6 +1,6 @@
 import turtle
 import random
-import sys
+
 
 # Set up the screen
 wn = turtle.Screen()
@@ -18,12 +18,12 @@ player.penup()
 player.speed(0)
 player.goto(0, 0)
 
-
 score_writer = turtle.Turtle()
 score_writer.hideturtle()
 score_writer.penup()
 score_writer.speed(0)
 score_writer.goto(0, 150)
+score_writer.pendown()
 score_writer.write("Score: 0", align="center", font=("Courier", 24, "normal"))
 
 #variables
@@ -33,17 +33,16 @@ pipes = []
 pipe_speed = 4
 score_var = 0
 
-
 # Functions
 
 def go_up():
     y = player.ycor()
-    y += 30
+    y += 75
     player.sety(y)
 
 def gravity():
     y = player.ycor()
-    y -= 2
+    y -= 5
     player.sety(y)
     if player.ycor() <= -200 or player.ycor() >= 200:
         game_over()
@@ -56,56 +55,41 @@ def game_over():
     game_over_var = True
     
 #pipe functions   
-def generate_pipe_top(x):
+def generate_pipe_top():
     pipe = turtle.Turtle()
     pipe.hideturtle()
     pipe.shape("pipetop.gif")
     pipe.penup()
     pipe.speed(0)
-    pipe.goto(x, random.randint(100, 200))
+    pipe.goto(300, random.randint(100, 200))
     pipe.setheading(180)
     pipe.showturtle()
     return pipe
 
-def generate_pipe_bottom(x):
+def generate_pipe_bottom():
     pipe = turtle.Turtle()
     pipe.hideturtle()
     pipe.shape("pipebottom.gif")
     pipe.penup()
     pipe.speed(0)
-    pipe.goto(x, random.randint(-200, -100))
+    pipe.goto(300, random.randint(-200, -100))
     pipe.setheading(180)
     pipe.showturtle()
     return pipe
 
 def create_pipes():
-    x = random.randint(0, 200)
-    pipes.extend([generate_pipe_top(x), generate_pipe_bottom(x)])
-    pipes.append(generate_pipe_bottom(x))
+    pipes.extend([generate_pipe_top(), generate_pipe_bottom()])
     
 def move_pipe():
-    global game_over_var
-    if game_over_var:
-        game_over()
+    if pipes[0].xcor() < -300:
+        for i in range (len(pipes)):
+            pipes[i].clear()
+            pipes[i].hideturtle()
+        pipes.clear()
+        create_pipes()
     else:
-        if pipes[0].xcor() < -300:
-            for i in range (len(pipes)):
-                pipes[i].clear()
-                pipes[i].hideturtle()
-            pipes.clear()
-            create_pipes()
-        else:
-            for item in range (len(pipes)):
-                pipes[item].forward(pipe_speed)
-                
-def exit_game():
-    """Clean exit from the game"""
-    for pipe in pipes:
-        pipe.hideturtle()
-    player.hideturtle()
-    score_writer.clear()
-    wn.bye()
-    sys.exit()
+        for item in range (len(pipes)):
+            pipes[item].forward(pipe_speed)
 
 #Collision Detection
 
@@ -132,19 +116,15 @@ def score():
 # Keyboard bindings
 wn.listen()
 wn.onkey(go_up, "Up")
-wn.onkey(exit_game, "Escape")
+
 
 #create pipes
-for i in range(1):
-    create_pipes()
+create_pipes()
 
 # Main game loop 
 while True:
-    try:
-        collision_detection()
-        gravity()
-        move_pipe()
-        score()
-        wn.update()
-    except:
-        exit_game()
+    collision_detection()
+    gravity()
+    move_pipe()
+    score()
+    wn.update()
