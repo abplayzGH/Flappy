@@ -2,21 +2,21 @@ import turtle
 import random
 import time
 import gc
-import leaderboard
 
 
 # Set up the screen
 wn = turtle.Screen()
+wn.title("Flappy")
 wn.bgcolor("lightblue")
 wn.setup(width=500, height=400)
 wn.register_shape('pipetop.gif')
 wn.register_shape('pipebottom.gif')
-wn.register_shape('bird.gif')
 wn.tracer(0)
 
 # Create a turtle
 player = turtle.Turtle()
-player.shape("bird.gif")
+player.shape("turtle")
+player.color("green")
 player.penup()
 player.speed(0)
 player.goto(0, 0)
@@ -29,8 +29,6 @@ score_writer.goto(0, 150)
 score_writer.pendown()
 score_writer.write("Score: 0", align="center", font=("Courier", 24, "normal"))
 
-#leaderboard
-leaderboard.add_score("cool", 21)
 #variables
 
 game_over_var = False
@@ -58,7 +56,6 @@ def game_over():
     player.goto(0, 0)
     player.write("Game Over", align="center", font=("Courier", 24, "normal"))
     game_over_var = True
-    # leaderboard.add_score("test", score_var)
     
 #pipe functions   
 def generate_pipe_top():
@@ -67,7 +64,7 @@ def generate_pipe_top():
     pipe.shape("pipetop.gif")
     pipe.penup()
     pipe.speed(0)
-    pipe.goto(300, random.randint(150, 200))
+    pipe.goto(300, random.randint(125, 200))
     pipe.setheading(180)
     pipe.showturtle()
     return pipe
@@ -78,7 +75,7 @@ def generate_pipe_bottom():
     pipe.shape("pipebottom.gif")
     pipe.penup()
     pipe.speed(0)
-    pipe.goto(300, random.randint(-200, -150))
+    pipe.goto(300, random.randint(-200, -125))
     pipe.setheading(180)
     pipe.showturtle()
     return pipe
@@ -100,21 +97,21 @@ def move_pipe():
 
 def collision_detection():
     for item in range (len(pipes)):
-        if player.distance(pipes[item]) < 80:
+        if player.distance(pipes[item]) < 75:
             game_over()
 
 #score functions
 
-def update_score():
+def score():
     global score_var
-    global pipe_speed
-    for pipe in pipes:
-        if player.xcor() > pipe.xcor() and not hasattr(pipe, 'scored'):
-            score_var += 0.5
-            pipe.scored = True
-            score_writer.clear()
-            score_writer.write(f"Score: {round(score_var)}", align="center", font=("Courier", 24, "normal"))
-            pipe_speed += 0.2
+    if player.xcor() == pipes[0].xcor():
+        score_var += 1
+        score_writer.clear()
+        score_writer.write((f"Score: {score_var}"), align="center", font=("Courier", 24, "normal"))
+        if score_var % 5 == 0:
+            global pipe_speed
+            pipe_speed += 1
+
 
 # Keyboard bindings
 wn.listen()
@@ -130,7 +127,7 @@ while not game_over_var:
     collision_detection()
     gravity()
     move_pipe()
-    update_score()
+    score()
     wn.update()
     time.sleep(0.02)
     wn.update()
