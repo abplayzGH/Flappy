@@ -5,6 +5,8 @@ import random
 import time
 import gc
 import leaderboard
+import sys
+
 
 def start_game():
     global wn
@@ -14,6 +16,7 @@ def start_game():
     global pipes
     global pipe_speed
     global score_var
+    # global root
 
 
     game_over_var = False
@@ -48,16 +51,17 @@ def start_game():
     score_writer.pendown()
     score_writer.write("Score: 0", align="center", font=("Courier", 24, "normal"))
 
-    time.sleep(2)
+    time.sleep(1)
     wn.listen()
     wn.onkey(go_up, "Up")
     wn.onkey(lambda: restart_game(True), "y")
     wn.onkey(lambda: restart_game(False), "n")
+    
+    # root = wn._root  # Access Tkinter root window
+    # root.protocol("WM_DELETE_WINDOW", exit_game) 
 
     create_pipes()
 
-#leaderboard
-# leaderboard.add_score("cool", 21)
 
 # Functions
 
@@ -74,13 +78,17 @@ def gravity():
         game_over()
 
 
+def exit_game():
+    print("Exiting game")
+    wn.bye()
+    sys.exit()
+
 def restart_game(x: bool):
     if x:
         print("Restarting game")
         start_game()
     else: 
-        print("Exiting game")
-        wn.bye()
+        exit_game()
 
 def game_over():
     global game_over_var
@@ -91,8 +99,24 @@ def game_over():
     player.write("Y to restart ", align="center", font=("Courier", 10, "normal"))
     player.goto(0, -40)
     player.write("N to quit ", align="center", font=("Courier", 10, "normal"))
+
+    for pipe in pipes:
+        pipe.hideturtle()
+
     game_over_var = True
-    # leaderboard.add_score("test", score_var)
+
+    # leaderboard
+    leaderboard.add_score("Player", int(score_var))
+    time.sleep(.1)
+
+    leaderboard_thin = leaderboard.get_leaderboard()[:5]
+    player.goto(0, -50)
+
+    for entry in leaderboard_thin:
+        player.goto(10, player.ycor() - 10)
+        player.write(("{:<20} {:<10}".format(entry["name"], entry["score"])), align="center", font=("Courier", 10, "normal"))
+
+    player.goto(0, 0)
     
 #pipe functions   
 def generate_pipe_top():
@@ -135,6 +159,7 @@ def move_pipe():
 def collision_detection():
     for item in range (len(pipes)):
         if player.distance(pipes[item]) < 80:
+            game_over_var = True
             game_over()
 
 #score functions
@@ -156,11 +181,20 @@ start_game()
 
     
 while True:
-    gc.collect()
-    collision_detection()
-    gravity()
-    move_pipe()
-    update_score()
-    wn.update()
-    time.sleep(0.02)
-    wn.update()
+    try:
+        if game_over_var:
+            wn.update()
+        else:
+            gc.collect()
+            collision_detection()
+            gravity()
+            move_pipe()
+            update_score()
+            wn.update()
+            time.sleep(0.02)
+    except turtle.Terminator:
+        exit_game()  # Exit the loop if the window is closed
+    except KeyboardInterrupt:
+        exit_game()  # Exit the loop if the window is closed
+    except Exception:
+        exit_game()  # Exit the loop if the window is closed
