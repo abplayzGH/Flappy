@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
-import turtle
 import main
+
 
 class TestFlappyGame(unittest.TestCase):
 
@@ -60,38 +60,39 @@ class TestFlappyGame(unittest.TestCase):
         main.score()
         self.assertEqual(main.score_var, initial_score + 1)
 
-        @patch('main.turtle.textinput', return_value='test_user')
-        @patch('main.leaderboard.get_leaderboard', return_value=[])
-        @patch('main.leaderboard.add_score')
-        def test_game_over_new_high_score(self, mock_add_score, mock_get_leaderboard, mock_textinput):
-            main.user_name = ""
-            main.score_var = 10
-            main.game_over()
-            mock_textinput.assert_called_once_with("Enter your name", "Enter your name")
-            mock_add_score.assert_called_once_with('test_user', 10)
-            self.assertTrue(main.game_over_var)
+    @patch('main.turtle.textinput', return_value='test_user')
+    @patch('main.leaderboard.get_leaderboard', return_value=[])
+    @patch('main.leaderboard.add_score')
+    def test_game_over_new_high_score(self, mock_add_score, mock_get_leaderboard, mock_textinput):
+        main.user_name = ""
+        main.score_var = 10
+        main.game_over()
+        mock_textinput.assert_called_once_with("Enter your name", "Enter your name")
+        mock_add_score.assert_called_once_with('test_user', 10)
+        self.assertTrue(main.game_over_var)
 
-        @patch('main.turtle.textinput', return_value='test_user')
-        @patch('main.leaderboard.get_leaderboard', return_value=[{"name": "user1", "score": 5}])
-        @patch('main.leaderboard.add_score')
-        def test_game_over_existing_high_score(self, mock_add_score, mock_get_leaderboard, mock_textinput):
-            main.user_name = ""
-            main.score_var = 10
-            main.game_over()
-            mock_textinput.assert_called_once_with("Enter your name", "Enter your name")
-            mock_add_score.assert_called_once_with('test_user', 10)
-            self.assertTrue(main.game_over_var)
+    @patch('main.turtle.textinput', return_value='test_user')
+    @patch('main.leaderboard.get_leaderboard', return_value=[{"name": "user1", "score": 5}])
+    @patch('main.leaderboard.add_score')
+    def test_game_over_existing_high_score(self, mock_add_score, mock_get_leaderboard, mock_textinput):
+        main.user_name = ""
+        main.score_var = 10
+        main.game_over()
+        mock_textinput.assert_called_once_with("Enter your name", "Enter your name")
+        mock_add_score.assert_called_once_with('test_user', 10)
+        self.assertTrue(main.game_over_var)
 
-        @patch('main.turtle.textinput', return_value='test_user')
-        @patch('main.leaderboard.get_leaderboard', return_value=[{"name": "user1", "score": 15}])
-        @patch('main.leaderboard.add_score')
-        def test_game_over_no_high_score(self, mock_add_score, mock_get_leaderboard, mock_textinput):
-            main.user_name = ""
-            main.score_var = 10
-            main.game_over()
-            mock_textinput.assert_called_once_with("Enter your name", "Enter your name")
-            mock_add_score.assert_not_called()
-            self.assertTrue(main.game_over_var)
+    @patch('main.turtle.textinput', return_value='test_user')
+    @patch('main.leaderboard.get_leaderboard', return_value=[{"name": "user1", "score": 15}])
+    @patch('main.leaderboard.add_score')
+    def test_game_over_no_high_score(self, mock_add_score, mock_get_leaderboard, mock_textinput):
+        main.user_name = ""
+        main.score_var = 10
+        main.game_over()
+        mock_textinput.assert_called_once_with("Enter your name", "Enter your name")
+        mock_add_score.assert_not_called()
+        self.assertTrue(main.game_over_var)
+
 
 if __name__ == '__main__':
     unittest.main()

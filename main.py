@@ -1,4 +1,4 @@
-#/bin/python3
+# /bin/python3
 
 import turtle
 import random
@@ -8,6 +8,8 @@ import leaderboard
 import sys
 
 user_name = ""
+
+
 def start_game():
     global wn
     global player
@@ -17,14 +19,12 @@ def start_game():
     global pipe_speed
     global score_var
     global user_name
-    # global root
-
 
     game_over_var = False
     pipes = []
     pipe_speed = 5
     score_var = 0
-    
+
     # Set up the screen
     wn = turtle.Screen()
     wn.clear()
@@ -57,9 +57,6 @@ def start_game():
     wn.onkey(go_up, "Up")
     wn.onkey(lambda: restart_game(True), "y")
     wn.onkey(lambda: restart_game(False), "n")
-    
-    # root = wn._root  # Access Tkinter root window
-    # root.protocol("WM_DELETE_WINDOW", exit_game) 
 
     create_pipes()
 
@@ -70,6 +67,7 @@ def go_up():
     y = player.ycor()
     y += 75
     player.sety(y)
+
 
 def gravity():
     y = player.ycor()
@@ -84,12 +82,14 @@ def exit_game():
     wn.bye()
     sys.exit()
 
+
 def restart_game(x: bool):
     if x:
         print("Restarting game")
         start_game()
-    else: 
+    else:
         exit_game()
+
 
 def game_over():
     global game_over_var
@@ -109,13 +109,12 @@ def game_over():
 
     if user_name == "":
         user_name = turtle.textinput("Enter your name", "Enter your name")
-    
 
-    # leaderboard 
-    if (len(leaderboard.get_leaderboard()) == 0):
+    # leaderboard
+    if len(leaderboard.get_leaderboard()) == 0:
         leaderboard.add_score(user_name, int(score_var))
         time.sleep(.1)
-    elif (leaderboard.get_leaderboard()[-1]["score"] <= int(score_var)):
+    elif leaderboard.get_leaderboard()[-1]["score"] <= int(score_var):
         leaderboard.add_score(user_name, int(score_var))
         time.sleep(.1)
     else:
@@ -129,12 +128,13 @@ def game_over():
         player.write(("{:<20} {:<10}".format(entry["name"], entry["score"])), align="center", font=("Courier", 10, "normal"))
 
     player.goto(0, 0)
-    
+
     wn.listen()
     wn.onkey(lambda: restart_game(True), "y")
     wn.onkey(lambda: restart_game(False), "n")
-    
-#pipe functions   
+
+
+# pipe functions
 def generate_pipe_top():
     pipe = turtle.Turtle()
     pipe.hideturtle()
@@ -145,6 +145,7 @@ def generate_pipe_top():
     pipe.setheading(180)
     pipe.showturtle()
     return pipe
+
 
 def generate_pipe_bottom():
     pipe = turtle.Turtle()
@@ -157,9 +158,11 @@ def generate_pipe_bottom():
     pipe.showturtle()
     return pipe
 
+
 def create_pipes():
     pipes.extend([generate_pipe_top(), generate_pipe_bottom()])
-    
+
+
 def move_pipe():
     for pipe in pipes:
         pipe.forward(pipe_speed)
@@ -170,15 +173,15 @@ def move_pipe():
         create_pipes()
 
 
-#Collision Detection
+# Collision Detection
 
 def collision_detection():
-    for item in range (len(pipes)):
+    for item in range(len(pipes)):
         if player.distance(pipes[item]) < 80:
-            game_over_var = True
             game_over()
 
-#score functions
+
+# score functions
 
 def update_score():
     global score_var
@@ -191,11 +194,11 @@ def update_score():
             score_writer.write(f"Score: {round(score_var)}", align="center", font=("Courier", 24, "normal"))
             pipe_speed += 0.2
 
+
 # Keyboard bindings
 
 start_game()
 
-    
 while True:
     try:
         if game_over_var:
@@ -214,4 +217,4 @@ while True:
         exit_game()  # Exit the loop if the window is closed
     except Exception as e:
         print(e)
-        exit_game()   # Exit the loop if the window is closed
+        exit_game()  # Exit the loop if the window is closed

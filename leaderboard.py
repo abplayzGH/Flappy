@@ -3,6 +3,7 @@ import os
 
 LEADERBOARD_FILE = 'leaderboard.json'
 
+
 # Function to load leaderboard data from the JSON file
 def load_leaderboard():
     """Load the leaderboard from the JSON file."""
@@ -16,6 +17,7 @@ def load_leaderboard():
     else:
         return []
 
+
 # Function to save leaderboard data to the JSON file
 def save_leaderboard(leaderboard):
     """Save the leaderboard to the JSON file."""
@@ -24,6 +26,7 @@ def save_leaderboard(leaderboard):
             json.dump(leaderboard, file, indent=4)
     except IOError as e:
         print(f"Error saving leaderboard file: {e}")
+
 
 # Function to add a new player and score to the leaderboard
 def add_score(name, score):
@@ -38,12 +41,12 @@ def add_score(name, score):
     save_leaderboard(leaderboard)
 
 
-
 # Function to get the current leaderboard (sorted by score)
 def get_leaderboard():
     """Get the sorted leaderboard."""
     leaderboard = load_leaderboard()
     return sorted(leaderboard, key=lambda x: x['score'], reverse=True)
+
 
 # Function to display the leaderboard
 def display_leaderboard():
