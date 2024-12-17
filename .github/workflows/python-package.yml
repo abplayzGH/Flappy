@@ -29,8 +29,6 @@ jobs:
     - name: Set up display
       run: |
         sudo apt-get install -y xvfb
-        Xvfb :99 -screen 0 1024x768x24 &
-        export DISPLAY=:99
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -39,4 +37,4 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        pytest test_main.py
+        xvfb-run -a pytest test_main.py
