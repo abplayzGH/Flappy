@@ -7,7 +7,7 @@ import gc
 import leaderboard
 import sys
 
-
+user_name = ""
 def start_game():
     global wn
     global player
@@ -16,14 +16,15 @@ def start_game():
     global pipes
     global pipe_speed
     global score_var
+    global user_name
     # global root
 
 
     game_over_var = False
     pipes = []
-    pipe_speed = 4
+    pipe_speed = 5
     score_var = 0
-
+    
     # Set up the screen
     wn = turtle.Screen()
     wn.clear()
@@ -92,6 +93,7 @@ def restart_game(x: bool):
 
 def game_over():
     global game_over_var
+    global user_name
     player.hideturtle()
     player.goto(0, 0)
     player.write("Game Over", align="center", font=("Courier", 24, "normal"))
@@ -105,9 +107,19 @@ def game_over():
 
     game_over_var = True
 
-    # leaderboard
-    leaderboard.add_score("Player", int(score_var))
-    time.sleep(.1)
+    if user_name == "":
+        user_name = turtle.textinput("Enter your name", "Enter your name")
+    
+
+    # leaderboard 
+    if (len(leaderboard.get_leaderboard()) == 0):
+        leaderboard.add_score(user_name, int(score_var))
+        time.sleep(.1)
+    elif (leaderboard.get_leaderboard()[-1]["score"] <= int(score_var)):
+        leaderboard.add_score(user_name, int(score_var))
+        time.sleep(.1)
+    else:
+        pass
 
     leaderboard_thin = leaderboard.get_leaderboard()[:5]
     player.goto(0, -50)
@@ -117,6 +129,10 @@ def game_over():
         player.write(("{:<20} {:<10}".format(entry["name"], entry["score"])), align="center", font=("Courier", 10, "normal"))
 
     player.goto(0, 0)
+    
+    wn.listen()
+    wn.onkey(lambda: restart_game(True), "y")
+    wn.onkey(lambda: restart_game(False), "n")
     
 #pipe functions   
 def generate_pipe_top():
@@ -196,5 +212,6 @@ while True:
         exit_game()  # Exit the loop if the window is closed
     except KeyboardInterrupt:
         exit_game()  # Exit the loop if the window is closed
-    except Exception:
-        exit_game()  # Exit the loop if the window is closed
+    except Exception as e:
+        print(e)
+        exit_game()   # Exit the loop if the window is closed

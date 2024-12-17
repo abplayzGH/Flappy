@@ -1,66 +1,34 @@
 [
     {
-        "name": "test",
+        "name": "adam",
+        "score": 14
+    },
+    {
+        "name": "adam",
         "score": 3
     },
     {
-        "name": "test",
+        "name": "adam",
+        "score": 3
+    },
+    {
+        "name": "adam",
+        "score": 3
+    },
+    {
+        "name": "adam",
         "score": 2
     },
     {
-        "name": "Player",
-        "score": 2
-    },
-    {
-        "name": "test",
+        "name": "adam",
         "score": 1
     },
     {
-        "name": "test",
-        "score": 1
-    },
-    {
-        "name": "test",
-        "score": 1
-    },
-    {
-        "name": "test",
+        "name": "afam",
         "score": 0
     },
     {
-        "name": "test",
-        "score": 0
-    },
-    {
-        "name": "Player",
-        "score": 0
-    },
-    {
-        "name": "Player",
-        "score": 0
-    },
-    {
-        "name": "Player",
-        "score": 0
-    },
-    {
-        "name": "Player",
-        "score": 0
-    },
-    {
-        "name": "Player",
-        "score": 0
-    },
-    {
-        "name": "Player",
-        "score": 0
-    },
-    {
-        "name": "Player",
-        "score": 0
-    },
-    {
-        "name": "Player",
+        "name": "adam",
         "score": 0
     }
 ]

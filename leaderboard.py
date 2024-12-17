@@ -37,6 +37,8 @@ def add_score(name, score):
     leaderboard = sorted(leaderboard, key=lambda x: x['score'], reverse=True)  # Sort by score in descending order
     save_leaderboard(leaderboard)
 
+
+
 # Function to get the current leaderboard (sorted by score)
 def get_leaderboard():
     """Get the sorted leaderboard."""
