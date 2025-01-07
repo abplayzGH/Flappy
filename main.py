@@ -106,16 +106,15 @@ def game_over():
         pipe.hideturtle()
 
     game_over_var = True
+    # user_name = "help"
+    user_name = turtle.textinput("Enter your name", "Enter your name")
 
-    if user_name == "":
-        user_name = turtle.textinput("Enter your name", "Enter your name")
-
-    # leaderboard
+    #leaderboard
     if len(leaderboard.get_leaderboard()) == 0:
-        leaderboard.add_score(user_name, int(score_var))
+        leaderboard.add_score(str(user_name), int(score_var))
         time.sleep(.1)
     elif leaderboard.get_leaderboard()[-1]["score"] <= int(score_var):
-        leaderboard.add_score(user_name, int(score_var))
+        leaderboard.add_score(str(user_name), int(score_var))
         time.sleep(.1)
     else:
         pass
@@ -125,7 +124,7 @@ def game_over():
 
     for entry in leaderboard_thin:
         player.goto(10, player.ycor() - 10)
-        player.write(("{:<20} {:<10}".format(entry["name"], entry["score"])), align="center", font=("Courier", 10, "normal"))
+        player.write((f"{entry["name"]} {entry["score"]}"), align="center", font=("Courier", 10, "normal"))
 
     player.goto(0, 0)
 
@@ -203,6 +202,7 @@ while True:
     try:
         if game_over_var:
             wn.update()
+            time.sleep(0.02)
         else:
             gc.collect()
             collision_detection()
